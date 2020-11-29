@@ -3,6 +3,7 @@
 // import 'package:chatapp/services/auth.dart';
 // import 'package:chatapp/services/database.dart';
 import 'package:chat_app/services/auth.dart';
+import 'package:chat_app/services/database.dart';
 import 'package:chat_app/views/chatroom.dart';
 import 'package:chat_app/widgets/widget.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _SignUpState extends State<SignUp> {
   // AuthService authService = new AuthService();
   // DatabaseMethods databaseMethods = new DatabaseMethods();
   AuthService authService = new AuthService();
+  DatabaseMethods databaseMethods = new DatabaseMethods();
 
   final formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -32,6 +34,11 @@ class _SignUpState extends State<SignUp> {
   singUp() async {
 
     if(formKey.currentState.validate()){
+      Map<String,String> userInfoMap = {
+        "name" : usernameEditingController.text,
+        "email" : emailEditingController.text
+      };
+      
       setState(() {
 
         isLoading = true;
@@ -41,6 +48,13 @@ class _SignUpState extends State<SignUp> {
       authService.signUpWithEmailAndPassword(emailEditingController.text,passwordEditingController.text).then((val) {
         // print("$(val.uid)");
       } );
+
+      // Map for collection type for key value here we got email and name
+
+      
+
+  // upload data to firestore
+      databaseMethods.uploadUserInfo(userInfoMap);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ChatRoom()));
 
     //   await authService.signUpWithEmailAndPassword(emailEditingController.text,
